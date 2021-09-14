@@ -1,0 +1,41 @@
+diff --git a/node_modules/draft-js-export-markdown/lib/stateToMarkdown.js b/node_modules/draft-js-export-markdown/lib/stateToMarkdown.js
+index ea6573a..c17bb79 100644
+--- a/node_modules/draft-js-export-markdown/lib/stateToMarkdown.js
++++ b/node_modules/draft-js-export-markdown/lib/stateToMarkdown.js
+@@ -274,6 +274,17 @@ function () {
+ 
+           if (blockType === _draftJsUtils.BLOCK_TYPE.CODE) {
+             return content;
++          }
++
++          var contentLength = content.length;
++          content = content.trimLeft();
++          var leftPad = contentLength - content.length;
++          content = content.trimRight();
++          var rightPad = contentLength - content.length - leftPad;
++
++          if (!content.length) {
++            // Return the original text if there is nothing left after trimming.
++            return text;
+           } // NOTE: We attempt some basic character escaping here, although
+           // I don't know if escape sequences are really valid in markdown,
+           // there's not a canonical spec to lean on.
+@@ -283,7 +294,7 @@ function () {
+             return '`' + encodeCode(content) + '`';
+           }
+ 
+-          content = encodeContent(text);
++          content = encodeContent(content);
+ 
+           if (style.has(BOLD)) {
+             content = "**".concat(content, "**");
+@@ -303,7 +314,8 @@ function () {
+             content = "~~".concat(content, "~~");
+           }
+ 
+-          return content;
++          content = content.padStart(content.length + leftPad);
++          return content.padEnd(content.length + rightPad);
+         }).join('');
+         var entity = entityKey ? contentState.getEntity(entityKey) : null;
+ 
