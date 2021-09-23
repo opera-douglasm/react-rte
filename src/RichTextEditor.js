@@ -320,6 +320,12 @@ export default class RichTextEditor extends Component {
   }
 
   _handleKeyCommand(command: string): boolean {
+    if (command === "underline") {
+      // Skip underline command.
+      // Tried skipping it in _onKeypress in EditorToolbar, but didn't work,
+      // so skipping it here as a workaround.
+      return true;
+    }
     let editorState = this.props.value.getEditorState();
     let newEditorState = RichUtils.handleKeyCommand(editorState, command);
     if (newEditorState) {
